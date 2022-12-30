@@ -1,0 +1,90 @@
+openapi: '3.0.2'
+info:
+  title: Cart Category
+  description: API Spec for Shopping Cart
+  version: '1.0'
+servers:
+  - url: https://localhost:3000/v1
+paths:
+  /cart:
+    get:
+      security: 
+        - cartAuth: []
+      description: 'Show Shopping Cart'
+      responses:
+        '200':
+          description: 'Success Get Shopping Cart'
+          content:
+            "application/json" :
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data: 
+                    type: array
+                    items: 
+                      $ref: "#/components/schemas/cart"
+    post:
+      security: 
+        - cartAuth: []
+      description: 'Add Product'
+      parameters: []
+      responses:
+        '201':
+          description: Success Add New Product
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/cart"
+    delete:
+      security: 
+        - cartAuth: []
+      description: 'Delete Cart Product'
+      parameters: 
+        - name: cartId
+          required: true
+          in: path
+          schema: 
+            type: number
+      responses:
+        '200':
+          description: Detele Cart by Id
+          content:
+            "application/json":
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: number
+                  status:
+                    type: string
+
+components:
+  securitySchemes:
+    cartAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Authentication fo Cart
+  schemas:
+    cart:
+      type: object
+      properties:
+        kodeProduk:
+          type: number
+        namaProduk:
+          type: string
+        kuantitas:
+          type: number
