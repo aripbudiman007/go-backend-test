@@ -7,7 +7,8 @@ import (
 
 func ToCartResponse(cart domain.Cart) web.CartResponse {
 	return web.CartResponse{
-		KdProduk:   cart.CartId,
+		CartId:     cart.CartId,
+		KodeProduk: cart.KodeProduk,
 		ProdukName: cart.ProdukName,
 		Kuantiti:   cart.Kuantiti,
 	}

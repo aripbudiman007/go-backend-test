@@ -1,0 +1,18 @@
+@host=http://localhost:3000
+###
+GET {{host}}/api/cart
+
+###
+POST {{host}}/api/cart 
+
+{
+    "KodeProduk" : 1,
+    "ProdukName" : "Test A",
+    "Kuantiti": 11
+}
+
+###
+GET {{host}}/api/cart/2
+
+###
+DELETE {{host}}/api/cart/1

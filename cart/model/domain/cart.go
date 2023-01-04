@@ -2,7 +2,7 @@ package domain
 
 type Cart struct {
 	CartId     int
-	KodeProduk string
+	KodeProduk int
 	ProdukName string
 	Kuantiti   int
 }

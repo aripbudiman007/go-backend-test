@@ -1,7 +1,7 @@
 package service
 
 import (
-	"cart/helper.go"
+	"cart/helper"
 	"cart/model/domain"
 	"cart/model/web"
 	"cart/repository"
@@ -14,20 +14,11 @@ type CartServiceImp struct {
 	DB             *sql.DB
 }
 
-func (service *CartServiceImp) Save(ctx context.Context, request web.CartCreateRequest) web.CartResponse {
-	tx, err := service.DB.Begin()
-
-	helper.PanicIfError(err)
-
-	defer helper.Commit0rRollback(tx)
-
-	cart := domain.Cart{
-		ProdukName: request.ProdukName,
+func NewCartService(cartRepository repository.CartRepository, DB *sql.DB) CartService {
+	return &CartServiceImp{
+		CartRepository: cartRepository,
+		DB:             DB,
 	}
-
-	service.CartRepository.Save(ctx, tx, cart)
-
-	return helper.ToCartResponse(cart)
 }
 
 func (service *CartServiceImp) Get(ctx context.Context) []web.CartResponse {
@@ -48,6 +39,24 @@ func (service *CartServiceImp) Get(ctx context.Context) []web.CartResponse {
 	return cartResponse
 }
 
+func (service *CartServiceImp) Save(ctx context.Context, request web.CartCreateRequest) web.CartResponse {
+	tx, err := service.DB.Begin()
+
+	helper.PanicIfError(err)
+
+	defer helper.Commit0rRollback(tx)
+
+	cart := domain.Cart{
+		KodeProduk: request.KodeProduk,
+		ProdukName: request.ProdukName,
+		Kuantiti:   request.Kuantiti,
+	}
+
+	cart = service.CartRepository.Save(ctx, tx, cart)
+
+	return helper.ToCartResponse(cart)
+}
+
 func (service *CartServiceImp) Delete(ctx context.Context, cartId int) {
 	tx, err := service.DB.Begin()
 
@@ -56,7 +65,6 @@ func (service *CartServiceImp) Delete(ctx context.Context, cartId int) {
 	defer helper.Commit0rRollback(tx)
 
 	cart, err := service.CartRepository.FindById(ctx, tx, cartId)
-
 	helper.PanicIfError(err)
 
 	service.CartRepository.Delete(ctx, tx, cart)

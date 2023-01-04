@@ -1,7 +1,7 @@
 package web
 
 type CartCreateRequest struct {
-	KdProduk   int
+	KodeProduk int
 	ProdukName string
 	Kuantiti   int
 }
